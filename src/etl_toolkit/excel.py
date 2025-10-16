@@ -14,6 +14,7 @@ def read_excel(
     header_row: int | None = 0,
     has_header: bool = True,
     columns: Sequence[int] | Sequence[str] | str | None = None,
+    read_options: dict[str, Any] | None = None,
     drop_empty_rows: bool = True,
     drop_empty_cols: bool = True,
     raise_if_empty: bool = True,
@@ -24,8 +25,7 @@ def read_excel(
     Read an Excel file into a Polars LazyFrame with enhanced processing options.
 
     This function extends Polars' read_excel functionality by adding automatic
-    column name cleaning and optional data type casting. It reads Excel data
-    and returns a LazyFrame for efficient data processing.
+    column name cleaning and optional data type casting. It reads Excel data and returns aLazyFrame for efficient data processing.
 
     Parameters
     ----------
@@ -41,6 +41,8 @@ def read_excel(
         Whether the sheet has a header row
     columns : Sequence[int] | Sequence[str] | str, optional
         Columns to select (by index or name)
+    read_options : dict[str, Any], optional
+        Dictionary of read options passed to polars.read_excel
     drop_empty_rows : bool, default=True
         Remove empty rows from the result
     drop_empty_cols : bool, default=True
@@ -48,7 +50,9 @@ def read_excel(
     raise_if_empty : bool, default=True
         Raise an exception if the resulting DataFrame is empty
     cast : dict[str, pl.DataType], optional
-        Dictionary mapping column names to desired data types for casting
+        Dictionary mapping column names to desired data types for casting.
+        Note: Column names will be automatically stripped and converted to lowercase,
+        so specify column names in lowercase when using this parameter.
     **kwargs : Any
         Additional keyword arguments passed to polars.read_excel
 
@@ -72,9 +76,10 @@ def read_excel(
     if sheet_id is not None and sheet_name is not None:
         raise ValueError("sheet_id and sheet_name cannot be both specified.")
 
-    read_options = {
-        "header_row": header_row,
-    }
+    if has_header:
+        read_options = {
+            "header_row": header_row,
+        }
 
     df = pl.read_excel(
         source,
@@ -92,7 +97,7 @@ def read_excel(
     df.columns = [col.strip().lower() for col in df.columns]
     logger.info(f"Intial df rows: {df.height}, columns: {df.width}")
 
-    if df.height == 0:
+    if df.is_empty():
         logger.warning("Dataframe is empty.")
 
     if cast is not None:
@@ -105,3 +110,68 @@ def read_excel(
             df = df.with_columns(pl.col(col).cast(dtype, strict=False))
 
     return df.lazy()
+
+
+def find_header_row(
+    source: FileSource,
+    sheet_id: int | None = None,
+    sheet_name: str | None = None,
+    max_rows: int = 100,
+) -> int:
+    """
+    Find the header row in an Excel file by identifying the row with maximum consecutive non-null values.
+
+    This function scans the first `max_rows` rows of an Excel sheet to identify which row is most likely to be the header row based on the number of consecutive non-null string values.
+
+    Parameters
+    ----------
+    source : FileSource
+        Path to the Excel file or file-like object to read
+    sheet_id : int, optional
+        Sheet number to read (cannot be used with sheet_name)
+    sheet_name : str, optional
+        Sheet name to read (cannot be used with sheet_id)
+    max_rows : int, default=100
+        Maximum number of rows to scan for header identification
+
+    Returns
+    -------
+    int
+        The zero-based index of the identified header row
+
+    Examples
+    --------
+    >>> header_row_index = find_header_row("data.xlsx")
+    >>> df = read_excel("data.xlsx", header_row=header_row_index)
+    """
+    if sheet_id is not None and sheet_name is not None:
+        raise ValueError("sheet_id and sheet_name cannot be both specified.")
+
+    # Read first 100 rows without assuming header row
+    df = pl.read_excel(
+        source,
+        sheet_id=sheet_id,
+        sheet_name=sheet_name,
+        has_header=False,
+    ).head(max_rows)
+
+    max_consecutive = 0
+    header_row_index = 0
+    print("Total rows in dataframe:", df.height)
+
+    for i, row in enumerate(df.rows()):
+        consecutive_count = 0
+        for value in row:
+            if value is not None and str(value).strip() != "":
+                consecutive_count += 1
+            else:
+                break
+
+        if consecutive_count > max_consecutive:
+            max_consecutive = consecutive_count
+            header_row_index = i
+
+    logger.info(
+        f"Identified header row at index: {header_row_index} with {max_consecutive} consecutive non-null values"
+    )
+    return header_row_index
