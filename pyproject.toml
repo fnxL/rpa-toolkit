@@ -1,7 +1,7 @@
 [project]
 name = "etl-toolkit"
 version = "0.1.1b1"
-description = "Add your description here"
+description = "A Python toolkit for Extract, Transform, and Load (ETL) pipelines with enhanced processing and solutions to common ETL challenges."
 readme = "README.md"
 authors = [
     { name = "fnxL", email = "48607132+fnxL@users.noreply.github.com" }
