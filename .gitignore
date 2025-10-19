@@ -3,6 +3,7 @@ check.py
 *.xlsx
 *.txt
 *.json
+.python-version
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

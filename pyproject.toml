@@ -1,12 +1,12 @@
 [project]
 name = "rpa-toolkit"
-version = "0.1.1b1"
+version = "0.1.1b2"
 description = "A Python toolkit for Robotic Process Automation (RPA) with enhanced processing and solutions to common automation challenges."
 readme = "README.md"
 authors = [
     { name = "fnxL", email = "48607132+fnxL@users.noreply.github.com" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
     "fastexcel>=0.16.0",
     "openpyxl>=3.1.5",

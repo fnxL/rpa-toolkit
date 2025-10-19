@@ -15,7 +15,7 @@ The RPA Toolkit is designed to simplify data extraction and automation tasks, pa
 
 ## Prerequisites
 
-- Python 3.13 or higher
+- Python 3.10 or higher
 
 ## Installation
 
