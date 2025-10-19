@@ -1,7 +1,7 @@
 import polars as pl
 import tempfile
 import os
-from etl_toolkit.excel import find_header_row
+from rpa_toolkit.excel import find_header_row
 
 
 def test_find_header_row_with_proper_headers():

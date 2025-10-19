@@ -1,10 +1,10 @@
-# ETL Toolkit
+# RPA Toolkit
 
-A Python toolkit for Extract, Transform, and Load (ETL) pipelines with enhanced processing and solutions to common ETL challenges.
+A Python toolkit for Robotic Process Automation (RPA) with enhanced processing and solutions to common automation challenges.
 
 ## Overview
 
-The ETL Toolkit is designed to simplify data extraction and transformation tasks, particularly when working with different file formats like Excel, PDF, RTF, etc.
+The RPA Toolkit is designed to simplify data extraction and automation tasks, particularly when working with different file formats like Excel, PDF, RTF, etc.
 
 ## Features
 
@@ -20,7 +20,7 @@ The ETL Toolkit is designed to simplify data extraction and transformation tasks
 ## Installation
 
 ```bash
-pip install etl-toolkit
+pip install rpa-toolkit
 ```
 
 ## Usage Examples
@@ -30,7 +30,7 @@ pip install etl-toolkit
 #### Basic Excel Reading
 
 ```python
-from etl_toolkit import read_excel
+from rpa_toolkit import read_excel
 
 # Read an Excel file into a Polars LazyFrame
 df = read_excel("data.xlsx")
@@ -60,7 +60,7 @@ df = read_excel(
 #### Finding Header Rows
 
 ```python
-from etl_toolkit import find_header_row
+from rpa_toolkit import find_header_row
 
 # Find the header row in an Excel file
 header_row_index = find_header_row("messy_data.xlsx")
@@ -86,7 +86,7 @@ df = read_excel("data.xlsx", header_row=header_row_index)
 #### Basic PDF Text Extraction
 
 ```python
-from etl_toolkit import extract_text_from_pdf
+from rpa_toolkit import extract_text_from_pdf
 
 # Extract all text from a PDF
 text = extract_text_from_pdf("document.pdf")
@@ -120,8 +120,8 @@ Contributions are welcome! Here's how you can help:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/etl-toolkit.git
-cd etl-toolkit
+git clone https://github.com/your-username/rpa-toolkit.git
+cd rpa-toolkit
 
 # Install dependencies
 pip install -e .
@@ -135,7 +135,7 @@ pip install -e ".[dev]"
 pytest
 
 # Run tests with coverage
-pytest --cov=etl_toolkit
+pytest --cov=rpa_toolkit
 ```
 
 ## License

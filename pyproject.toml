@@ -1,7 +1,7 @@
 [project]
-name = "etl-toolkit"
+name = "rpa-toolkit"
 version = "0.1.1b1"
-description = "A Python toolkit for Extract, Transform, and Load (ETL) pipelines with enhanced processing and solutions to common ETL challenges."
+description = "A Python toolkit for Robotic Process Automation (RPA) with enhanced processing and solutions to common automation challenges."
 readme = "README.md"
 authors = [
     { name = "fnxL", email = "48607132+fnxL@users.noreply.github.com" }
@@ -20,8 +20,8 @@ license-files = ["LICEN[CS]E*"]
 
 
 [project.urls]
-Homepage = "https://github.com/fnxL/etl-toolkit"
-Issues = "https://github.com/fnxL/etl-toolkit/issues"
+Homepage = "https://github.com/fnxL/rpa-toolkit"
+Issues = "https://github.com/fnxL/rpa-toolkit/issues"
 
 
 [build-system]
