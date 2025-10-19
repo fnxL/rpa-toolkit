@@ -22,7 +22,7 @@ wheels = [
 
 [[package]]
 name = "etl-toolkit"
-version = "0.1.0"
+version = "0.1.1b1"
 source = { editable = "." }
 dependencies = [
     { name = "fastexcel" },
