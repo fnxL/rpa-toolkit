@@ -1,7 +1,7 @@
 import polars as pl
 import logging
 from polars._typing import FileSource
-from typing import Any, Sequence
+from typing import Any, Sequence, Literal
 
 logger = logging.getLogger(__name__)
 
@@ -205,3 +205,41 @@ def find_header_row(
         f"Identified header row at index: {header_row_index} with {max_consecutive} consecutive non-null values"
     )
     return header_row_index
+
+
+def read_excel_all_sheets(
+    source: FileSource,
+    *,
+    sheet_id: Literal[0] | Sequence[int] = 0,
+    columns: Sequence[int] | Sequence[str] | str | None = None,
+    read_options: dict[str, Any] | None = None,
+    drop_empty_rows: bool = True,
+    drop_empty_cols: bool = True,
+    raise_if_empty: bool = True,
+    cast: dict[str, pl.DataType] | None = None,
+    **kwargs: Any,
+) -> dict[str, pl.LazyFrame]:
+    df = pl.read_excel(
+        source,
+        sheet_id=sheet_id,
+        columns=columns,
+        read_options=read_options,
+        drop_empty_rows=drop_empty_rows,
+        drop_empty_cols=drop_empty_cols,
+        raise_if_empty=raise_if_empty,
+        **kwargs,
+    )
+
+    new_dfs = {}
+    for sheet, df in df.items():
+        df.columns = [col.strip().lower() for col in df.columns]
+        if cast is not None:
+            for col, dtype in cast.items():
+                if col not in df.columns:
+                    logger.warning(f"Column {col} not found in dataframe.")
+                    continue
+
+                df = df.with_columns(pl.col(col).cast(dtype, strict=False))
+        new_dfs[sheet.lower()] = df.lazy()
+
+    return new_dfs
