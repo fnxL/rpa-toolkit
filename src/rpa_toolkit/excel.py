@@ -102,6 +102,7 @@ def read_excel(
 
     if cast is not None:
         for col, dtype in cast.items():
+            col = col.strip().lower()
             if col not in df.columns:
                 logger.warning(f"Column {col} not found in dataframe.")
                 continue
@@ -235,6 +236,7 @@ def read_excel_all_sheets(
         df.columns = [col.strip().lower() for col in df.columns]
         if cast is not None:
             for col, dtype in cast.items():
+                col = col.strip().lower()
                 if col not in df.columns:
                     logger.warning(f"Column {col} not found in dataframe.")
                     continue
