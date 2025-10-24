@@ -154,7 +154,7 @@ wheels = [
 
 [[package]]
 name = "rpa-toolkit"
-version = "0.1.1"
+version = "0.1.2b1"
 source = { editable = "." }
 dependencies = [
     { name = "fastexcel" },
