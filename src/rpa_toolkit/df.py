@@ -59,3 +59,31 @@ def reorder_columns(
     selected_cols = [pl.col(col) for col in columns_order if col in df.columns]
     remaining_cols = [pl.col(col) for col in df.columns if col not in columns_order]
     return df.select(selected_cols + remaining_cols)
+
+
+def has_required_columns(
+    df: pl.DataFrame | pl.LazyFrame, required_columns: list[str]
+) -> bool:
+    """
+    Check if a Polars DataFrame or LazyFrame contains all required columns.
+
+    Args:
+        df (pl.DataFrame | pl.LazyFrame): The input DataFrame or LazyFrame.
+        required_columns (list[str]): A list of required column names.
+
+    Returns:
+        bool: True if all required columns are present, Otherwise a list of missing columns.
+    """
+    if isinstance(df, pl.LazyFrame):
+        available_columns = [col.lower() for col in df.collect_schema().names()]
+    else:
+        available_columns = [col.lower() for col in df.columns]
+
+    missing_cols = [
+        col for col in required_columns if col.lower() not in available_columns
+    ]
+
+    if not missing_cols:
+        return True
+
+    return missing_cols
